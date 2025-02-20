@@ -14,7 +14,11 @@ todoForm.addEventListener("submit", function (e) {
 function addTodo() {
   const todoText = todoInput.value.trim();
   if (todoText.length > 0) {
-    allTodos.push(todoText);
+    const todoObject = {
+        text: todoText,
+        completed: false
+    }
+    allTodos.push(todoObject);
     // createTodoItem(todoText);
     updateTodoList();
     saveTodos();
@@ -34,6 +38,7 @@ function updateTodoList() {
 function createTodoItem(todo, todoIndex) {
   const todoId = "todo-" + todoIndex;
   const todoLI = document.createElement("li");
+  const todoText = todo.text;
   todoLI.className = "todo";
   todoLI.innerHTML = `
         <input type="checkbox" id="${todoId}" />
@@ -49,7 +54,7 @@ function createTodoItem(todo, todoIndex) {
             </svg>
           </label>
           <label for="${todoId}" class="todo-text">
-            ${todo}
+            ${todoText}
           </label>
           <button class="delete-button">
             <svg
@@ -69,6 +74,13 @@ function createTodoItem(todo, todoIndex) {
     deleteButton.addEventListener("click", () => {
         deleteTodoItem(todoIndex);
     })
+
+    const checkbox = todoLI.querySelector("input");
+    checkbox.addEventListener("change", () => {
+        allTodos[todoIndex].completed = checkbox.checked;
+        saveTodos();
+    })
+    checkbox.checked = todo.completed;
   return todoLI;
 }
 
